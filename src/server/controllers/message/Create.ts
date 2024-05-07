@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import * as yup from 'yup';
 import { validation } from "../../shared/middlewares/Validation";
+import { EnviarMensagemFirebase } from "../../shared/services/FirebaseMesaging";
+
 
 interface IMessage {
-    deviceToken: String,
-    title: String,
-    body: String
+    deviceToken: string,
+    title: string,
+    body: string
 }
 
 
@@ -20,7 +22,16 @@ export const createValidation = validation((getSchema) => ({
 
 export const create = async (req: Request<{}, {}, IMessage>, res: Response) => {
 
-    console.log(req.body);
-    return res.status(StatusCodes.CREATED).json(123);
+  
+
+  EnviarMensagemFirebase(req.body.title, req.body.body, req.body.deviceToken).then(() => {
+    
+    return res.status(StatusCodes.CREATED).json(`Sucesso ao enviar mensagem`);
+  })
+  .catch((e) => {
+    return res.status(StatusCodes.BAD_REQUEST).json(`Erro ao realizar requisição: ${e.message}`);
+  });
+  
+
 
 }
