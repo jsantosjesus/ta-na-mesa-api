@@ -21,7 +21,6 @@ export const createValidation = validation((getSchema) => ({
   }));
 
 export const create = async (req: Request<{}, {}, IMessage>, res: Response) => {
-
   
 
   EnviarMensagemFirebase(req.body.title, req.body.body, req.body.deviceToken).then(() => {
